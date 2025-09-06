@@ -6,7 +6,7 @@
 
 generator client {
   provider = "prisma-client-js"
-  output   = "../lib/generated/prisma"
+  // output   = "../lib/generated/prisma"
 }
 
 datasource db {
@@ -17,9 +17,10 @@ datasource db {
 model User {
   id        String   @id @default(cuid())
   email     String   @unique
+  name      String?
   username  String   @unique
   clerkId   String   @unique
-  name      String?
+  age       String?
   bio       String?
   image     String?
   location  String?
@@ -28,42 +29,117 @@ model User {
   updatedAt DateTime @updatedAt
 
   //relations
-  posts    Post[] //one to many
-  comments Comment[] //one to many
-  likes    Like[] //one to many
+  posts    Post[]
+  comments Comment[]
+  likes    Like[]
 
-  followers Follow[] @relation("following") // user who follow this user
-  following Follow[] @relation("follower") // users this user follows
+  followers Follow[] @relation("follower")
+  following Follow[] @relation("following")
 
-  notifications        Notification[] @relation("userNotifications") // notification recived by user
-  notificationsCreated Notification[] @relation("notificationsCreator") // notifications created by used
+  createdNotifications  Notification[] @relation("createdNotifications")
+  recievedNotifications Notification[] @relation("recievedNotifications")
+
+  @@index([createdAt])
+  @@index([username])
+  @@index([email])
+}
+
+enum NotificationType {
+  LIKE
+  COMMENT
+  POST
+}
+
+model Notification {
+  id   String           @id @default(cuid())
+  type NotificationType
+  read Boolean          @default(false)
+
+  userId String
+  user   User   @relation("createdNotifications", fields: [userId], references: [id], onDelete: Cascade)
+
+  recipientId String
+  recipient   User   @relation("recievedNotifications", fields: [recipientId], references: [id], onDelete: Cascade)
+
+  postId String?
+  post   Post?   @relation(fields: [postId], references: [id], onDelete: Cascade)
+
+  commentId String?
+  comment   Comment? @relation(fields: [commentId], references: [id], onDelete: Cascade)
+
+  createdAt DateTime @default(now())
+
+  @@index([userId, createdAt])
+}
+
+model Follow {
+  createdAt DateTime @default(now())
+  updated   DateTime @updatedAt
+
+  followerId String
+  follower   User   @relation("follower", fields: [followerId], references: [id])
+
+  followingId String
+  following   User   @relation("following", fields: [followingId], references: [id])
+
+  @@id([followerId, followingId])
+  @@index([followerId, followingId])
 }
 
 model Post {
   id        String   @id @default(cuid())
-  authorId  String
   content   String?
   image     String?
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
+  likesCount Int @default(0)
+
   //relations
-  author        User           @relation(fields: [authorId], references: [id], onDelete: Cascade) //cascade: delete all posts if the user is no more
+  authorId String
+  author   User   @relation(fields: [authorId], references: [id], onDelete: Cascade)
+
   comments      Comment[]
-  likes         Likes[]
+  likes         Like[]
   notifications Notification[]
+
+  @@index([authorId])
+  @@index([createdAt])
+  @@index([likesCount])
+  @@index([authorId, createdAt])
 }
 
 model Comment {
   id        String   @id @default(cuid())
-  content   String
-  authorId  String
-  postId    String
+  content   String?
   createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 
   //relations
-  author User @relation(fields: [authorId], references: [id], onDelete: Cascade)
-  post   Post @relation(fields: [postId], references: [id], onDelete: Cascade)
+  authorId String
+  author   User   @relation(fields: [authorId], references: [id], onDelete: Cascade)
 
+  postId String
+  post   Post   @relation(fields: [postId], references: [id], onDelete: Cascade)
+
+  notifications Notification[]
+
+  @@index([authorId])
+  @@index([postId, authorId])
+}
+
+model Like {
+  id        String   @id @default(cuid())
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  //relations
+  authorId String
+  author   User   @relation(fields: [authorId], references: [id], onDelete: Cascade)
+
+  postId String
+  post   Post   @relation(fields: [postId], references: [id], onDelete: Cascade)
+
+  @@unique([authorId, postId])
   @@index([authorId, postId])
 }

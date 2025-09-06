@@ -3,6 +3,11 @@ import "./globals.css";
 import { ThemeProvider } from "@/components/theme-provider";
 import Navbar from "@/components/Navbar";
 
+export const metadata = {
+  title: 'Socially',
+  description: 'A description for my Next.js application.',
+}
+
 export default function RootLayout({
   children,
 }: Readonly<{
@@ -14,11 +19,7 @@ export default function RootLayout({
         <body
           className={`antialiased`}
         >
-          <ThemeProvider
-            attribute="class"
-            defaultTheme="system"
-            enableSystem
-            disableTransitionOnChange>
+          <ThemeProvider attribute="class" defaultTheme="system" enableSystem disableTransitionOnChange>
               <div className="min-h-screen">
                 <Navbar />
                 <main className="py-8">
