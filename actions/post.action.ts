@@ -11,7 +11,7 @@ export async function createPost(Content:string, Imageurl: string) {
         data:{
             content:Content,
             image:Imageurl,
-            authorId:userId
+            authorId:userId 
         }
     })
     revalidatePath("/")

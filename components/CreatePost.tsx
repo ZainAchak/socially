@@ -40,18 +40,22 @@ export default function CreatePost() {
     <Card className='mb-6 p-0 dark:bg-black/20 '>
         <CardContent className='pt-4 mb-6 '>
             <div className='space-y-4'>
+              {/* Avatar and TextArea */}
                 <div className='flex space-x-4'>
                     <Avatar className='w-10 h-10'>
                       <AvatarImage src={user?.imageUrl} />
                     </Avatar>
                     <Textarea
-                    className='min-h-[120px] resize-none border-none focus-visible:ring-0 p-2 text-base shadow-none'
+                    className='min-h-[120px] max-h-[130px] resize-none border-none focus-visible:ring-0 p-2 text-base shadow-none'
                       placeholder="What's on your mind?"
                       value={content}
                       onChange={(e)=>{setContent(e.target.value)}}
                       disabled={isPosting}/>
                 </div>
+
               {/* ImageUploads TODO */}
+
+              {/* Upload Photo and Post Button */}
               <div className='flex items-center justify-between border-t pt-4'>
                 <div className='flex space-x-2'>
                   <Button type='button' 
@@ -81,7 +85,6 @@ export default function CreatePost() {
                 </Button>
               </div>
             </div>
-
         </CardContent>
     </Card>
   )
