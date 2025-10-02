@@ -53,7 +53,7 @@ export async function getUserByClerkId(clerkId:string) {
 
 export async function getDbUserId() {
     const {userId:clerkId} = await auth()
-    if(!clerkId) throw new Error("UnAuthorized")
+    if(!clerkId) return null
 
     // if(!clerkId) return null //throw new Error("unauthorized")
 
@@ -70,25 +70,25 @@ export async function getRandomUsers() {
         
         //get 3 random users exlude ourselfs and the users that we already follow
         const randomUsers = await prisma.user.findMany({
-        where: {
-            id: { not: userId }, // exclude yourself
-            followers: {
-            none: {
-                followerId: userId, // exclude users already followed by me
+            where: {
+                id: { not: userId }, // exclude yourself
+                followers: {
+                none: {
+                    followerId: userId, // exclude users already followed by me
+                        },
                     },
                 },
-            },
-            select: {
-                id: true,
-                name: true,
-                username: true,
-                image: true,
-                _count: {
-                select: { followers: true },
+                select: {
+                    id: true,
+                    name: true,
+                    username: true,
+                    image: true,
+                    _count: {
+                    select: { followers: true },
+                    },
                 },
-            },
-            take: 3,
-        })
+                take: 2,
+            })
         return randomUsers
     } catch (error) {
         console.error("user.action.ts",error)
@@ -102,7 +102,7 @@ export async function toggleFollow(toFollowUserId:string) {
         if(!userId) return {success:false, error:"Unauthorized"}
         if(userId === toFollowUserId) return {success:false, error:"You can not follow yourself"}
 
-        const existingFollow = await prisma.follow.findUnique({
+        const existingFollow = await prisma.follows.findUnique({
             where:{
                 followerId_followingId:{
                     followerId:userId,
@@ -113,7 +113,7 @@ export async function toggleFollow(toFollowUserId:string) {
         
        if(existingFollow){
         //unfollow
-        const result = await prisma.follow.delete({
+        const result = await prisma.follows.delete({
             where:{
                 followerId_followingId:{
                     followerId: userId,
@@ -128,7 +128,7 @@ export async function toggleFollow(toFollowUserId:string) {
        else{
         //follow
         const result = await prisma.$transaction([
-            prisma.follow.create({
+            prisma.follows.create({
             data:{
                 followerId: userId,
                 followingId:toFollowUserId
@@ -136,9 +136,9 @@ export async function toggleFollow(toFollowUserId:string) {
 
             prisma.notification.create({
                 data:{
-                    userId:userId,
-                    recipientId: toFollowUserId,
-                    type:"LIKE" // need to be changed to "FOLLOW" as rightnow follows isn't added to schema
+                    userId:toFollowUserId,
+                    creatorId: userId,
+                    type:"FOLLOW" // need to be changed to "FOLLOW" as rightnow follows isn't added to schema
                 }
             })
         ])

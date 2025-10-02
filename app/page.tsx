@@ -7,6 +7,8 @@ import { currentUser } from "@clerk/nextjs/server";
 
 export default async function Home() {
   const user = await currentUser()
+
+  // if (!user) return
   return (
     <div className="grid grid-cols-1 lg:grid-cols-13 gap-3">
       <div className="lg:col-span-9">

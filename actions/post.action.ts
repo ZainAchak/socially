@@ -6,18 +6,22 @@ import { revalidatePath } from "next/cache"
 
 export async function createPost(Content:string, Imageurl: string) {
     try {
-    const userId = await getDbUserId()
-    const post = await prisma.post.create({
-        data:{
-            content:Content,
-            image:Imageurl,
-            authorId:userId 
+        const userId = await getDbUserId()
+        if (!userId) {
+            return { success: false, message: "User not found" }
         }
-    })
-    revalidatePath("/")
-    return {success:true, post}
+        const post = await prisma.post.create({
+            data: {
+                content: Content,
+                image: Imageurl,
+                authorId: userId
+            }
+        })
+
+        revalidatePath("/")
+        return { success: true, post }
     } catch (error) {
-        console.error("postaction.ts error", error)
-        return {success:false, error:"Failed to create post"}
+        console.error("Create Post Error", error)
+        return { success: false, message: "Failed to create post" }
     }
 }

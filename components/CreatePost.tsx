@@ -22,17 +22,23 @@ export default function CreatePost() {
       try{
         setIsPosting(true)
         const result = await createPost(content, imageUrl)
+
         if(result.success){
           setContent("")
           setImageUrl("")
-          setIsPosting(false)
           setShowImageUpload(false)
           toast.success("Post created successfully")
         }
+        else{
+          toast.error(result.message || "Failed to create post")
+        }
+
       }catch(error){
-        setIsPosting(false)
         console.error("Create Post",error)
         toast.error("Failed to create post")
+
+      }finally{
+        setIsPosting(false)
       }
     }
 
@@ -40,6 +46,7 @@ export default function CreatePost() {
     <Card className='mb-6 p-0 dark:bg-black/20 '>
         <CardContent className='pt-4 mb-6 '>
             <div className='space-y-4'>
+
               {/* Avatar and TextArea */}
                 <div className='flex space-x-4'>
                     <Avatar className='w-10 h-10'>
@@ -57,6 +64,7 @@ export default function CreatePost() {
 
               {/* Upload Photo and Post Button */}
               <div className='flex items-center justify-between border-t pt-4'>
+                
                 <div className='flex space-x-2'>
                   <Button type='button' 
                           variant={"ghost"} 
@@ -68,20 +76,20 @@ export default function CreatePost() {
                     Photo
                   </Button>
                 </div>
+
                 <Button className='flex items-center cursor-pointer'
                         onClick={handleSubmit}
                         disabled={(!content.trim() && !imageUrl || isPosting)}>
-                      {isPosting ? (
-                        <>
-                          <Loader2Icon className='size-4 mr-2 animate-spin cursor-pointer'/>
-                          Posting...
-                        </>
-                      ):
-                        <>
-                          <SendIcon className='size-4 mr-2 cursor-pointer'/>
-                          Post
-                        </>
-                      }
+                        {isPosting ? (
+                          <>
+                            <Loader2Icon className='size-4 mr-2 animate-spin cursor-pointer'/>
+                            Posting...
+                          </>
+                        ):
+                          <>
+                            <SendIcon className='size-4 mr-2 cursor-pointer'/>
+                            Post
+                          </>}
                 </Button>
               </div>
             </div>

@@ -37,6 +37,6 @@ export default function FollowButton({user:toFollowUser}:{user: any}) {
             variant={"secondary"}
             onClick={handleFollow}>
                 {isLoading ? <Loader2Icon className='w-4 h-4 animate-spin'/> : "Follow"}
-            </Button>
+    </Button>
   )
 }
