@@ -1,4 +1,5 @@
 "use client"
+
 import { createComment, deletePost, getPosts, toggleLike } from '@/actions/post.action'
 import { SignInButton, useUser } from '@clerk/nextjs'
 import React, { useState } from 'react'
