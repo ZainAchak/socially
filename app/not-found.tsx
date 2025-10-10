@@ -77,7 +77,7 @@ export default function NotFound() {
           </h2>
           <p className="text-base sm:text-lg text-muted-foreground max-w-md mx-auto leading-relaxed
                         opacity-0 animate-[fadeInUp_0.8s_ease-out_0.4s_both]">
-            The page you're looking for seems to have vanished into the digital void.
+            The page you are looking for seems to have vanished into the digital void.
           </p>
         </div>
 

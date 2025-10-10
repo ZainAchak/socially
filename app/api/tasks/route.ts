@@ -1,5 +1,3 @@
-import { currentUser } from "@clerk/nextjs/server";
-
 interface Task {
   id: number;
   title: string;
@@ -10,7 +8,7 @@ interface CreateTaskRequest {
   title: string;
 }
 
-let tasks: Task[] = [
+const tasks: Task[] = [
     { id: 1, title: "Task One", completed: false },
     { id: 2, title: "Task Two", completed: true }
 ];
@@ -35,7 +33,7 @@ export async function POST(request: Request){
         tasks.push(newTask);
         return Response.json(newTask, {status: 201});
         
-    } catch (error) {
+    } catch {
         return Response.json({error: "Invalid request"},{status: 400});
     }
 }
