@@ -7,7 +7,7 @@ import { Toaster } from "react-hot-toast"
 
 export const metadata = {
   title: 'Socially',
-  description: 'A description for my Next.js application.',
+  description: 'A Social media platform for learning purpose',
 }
 
 export default function RootLayout({

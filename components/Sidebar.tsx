@@ -33,7 +33,7 @@ export default async function Sidebar() {
               <h1 className="text-2xl font-semibold">{userData.name}</h1>
               <h3 className="text-sm text-muted-foreground">@{userData.username}</h3>
               <h2 className="mt-1 text-sm font-medium text-muted-foreground">
-                Software Developer @ Joojle
+                {userData.bio || "This user hasn't added a bio yet."}
               </h2>
             </div>
 
@@ -54,7 +54,7 @@ export default async function Sidebar() {
             <div className="flex flex-col items-start gap-2 mt-4 text-sm text-muted-foreground">
               <span className="flex items-center gap-2">
                 <MapPin size={16} className="text-slate-600" />
-                <span>Pakistan</span>
+                <span>{userData.location}</span>
               </span>
 
               <span className="flex items-center gap-2">
@@ -65,7 +65,7 @@ export default async function Sidebar() {
                   rel="noopener noreferrer"
                   className="underline hover:text-primary"
                 >
-                  www.zainachak.com
+                  {userData.website || "www.zainachak.com"}
                 </a>
               </span>
             </div>
