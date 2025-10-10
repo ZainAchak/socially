@@ -3,6 +3,7 @@ import "./globals.css";
 import { ThemeProvider } from "@/components/theme-provider";
 import Navbar from "@/components/Navbar";
 import Sidebar from "@/components/Sidebar";
+import Footer from "@/components/Footer";
 import { Toaster } from "react-hot-toast"
 
 export const metadata = {
@@ -22,9 +23,9 @@ export default function RootLayout({
           className={`antialiased`}
         >
           <ThemeProvider attribute="class" defaultTheme="system" enableSystem disableTransitionOnChange>
-              <div className="min-h-screen">
+              <div className="min-h-screen flex flex-col">
                 <Navbar />
-                <main className="py-8">
+                <main className="py-8 flex-1">
                   <div className="max-w-7xl mx-auto px-4">
                     <div className="grid grid-cols-1 lg:grid-cols-13 gap-3">
                       <div className="hidden lg:block lg:col-span-3">
@@ -34,6 +35,7 @@ export default function RootLayout({
                     </div>
                   </div>
                 </main>
+                <Footer />
               </div>
               <Toaster />
           </ThemeProvider>
