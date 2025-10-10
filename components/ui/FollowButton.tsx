@@ -6,7 +6,7 @@ import toast from 'react-hot-toast'
 import { Loader2Icon } from 'lucide-react'
 import { toggleFollow } from '@/actions/user.action'
 
-export default function FollowButton({user:toFollowUser}:{user: any}) {
+export default function FollowButton({user:toFollowUser}:{user: {id:string, name:string}}) {
     const [isLoading, setIsloading] = useState(false)
 
     async function handleFollow() {
@@ -32,7 +32,7 @@ export default function FollowButton({user:toFollowUser}:{user: any}) {
     } 
 
   return (
-    <Button className=' cursor-pointer' 
+    <Button className='cursor-pointer' 
             size={"sm"}
             variant={"secondary"}
             onClick={handleFollow}>
